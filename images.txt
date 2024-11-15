@@ -5,12 +5,19 @@
 # 支持指定架构
 # --platform=linux/arm64 xiaoyaliu/alist
 
+# 以下是 latest 版本
 alpine
+alpine/git
 golang
+node
 metacubex/mihomo
 --platform=linux/arm64 metacubex/mihomo
 
+
+# 以下是特定版本
 alpine:3.20
 golang:1.23.1-alpine3.20
+node:20-alpine
+php:8.2-fpm
 metacubex/mihomo:v1.18.8
 --platform=linux/arm64 metacubex/mihomo:v1.18.8
