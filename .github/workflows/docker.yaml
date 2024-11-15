@@ -155,3 +155,6 @@ jobs:
             echo "=============================================================================="     
             
         done < images.txt
+
+        echo "退出登录"
+        docker logout $ALIYUN_REGISTRY
