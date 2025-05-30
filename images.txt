@@ -7,15 +7,15 @@
 
 # 以下是 latest 版本
 # alpine
-golang
+# golang
 # node
 # metacubex/mihomo
 # --platform=linux/arm64 metacubex/mihomo
 # alpine/git
 
 # 特别镜像
-gitlab/gitlab-runner:alpine
-ghcr.io/open-webui/open-webui:main
+# gitlab/gitlab-runner:alpine
+# ghcr.io/open-webui/open-webui:main
 
 
 # 以下是特定版本
@@ -24,7 +24,8 @@ ghcr.io/open-webui/open-webui:main
 # golang:1.23.6-alpine3.20
 # docker:26.0.0
 # node:20-alpine
-node:22-alpine
+# node:22-alpine
+node:22
 # php:8.2-fpm
 # metacubex/mihomo:v1.18.8
 # --platform=linux/arm64 metacubex/mihomo:v1.18.8
