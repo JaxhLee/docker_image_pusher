@@ -24,6 +24,7 @@ ghcr.io/open-webui/open-webui:main
 # golang:1.23.6-alpine3.20
 # docker:26.0.0
 # node:20-alpine
+node:22-alpine
 # php:8.2-fpm
 # metacubex/mihomo:v1.18.8
 # --platform=linux/arm64 metacubex/mihomo:v1.18.8
