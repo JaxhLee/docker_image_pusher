@@ -6,7 +6,7 @@
 # --platform=linux/arm64 xiaoyaliu/alist
 
 # 以下是 latest 版本
-alpine
+# alpine
 # golang
 # node
 # metacubex/mihomo
@@ -18,7 +18,10 @@ alpine
 # ghcr.io/open-webui/open-webui:main
 
 # golang 最新版本
-golang:1.24-alpine3.22
+# golang:1.24-alpine3.22
+
+# alpine
+alpine:3.22
 
 # 以下是特定版本
 # registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v17.5.3
