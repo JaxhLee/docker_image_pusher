@@ -18,8 +18,7 @@ alpine
 # ghcr.io/open-webui/open-webui:main
 
 # golang 最新版本
-golang:1.23-alpine
-golang:1.24-alpine
+golang:1.24-alpine3.22
 
 # 以下是特定版本
 # registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v17.5.3
