@@ -18,7 +18,7 @@
 # ghcr.io/open-webui/open-webui:main
 
 # golang 最新版本
-# golang:1.24-alpine3.22
+golang:1.24-alpine3.22
 
 # alpine
 alpine:3.22
@@ -27,7 +27,7 @@ alpine:3.22
 # registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v17.5.3
 # registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.0.2
 # registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.1.1
-registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.2.0
+# registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.2.0
 
 
 # alpine:3.20
