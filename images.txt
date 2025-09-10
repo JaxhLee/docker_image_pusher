@@ -17,7 +17,7 @@
 # gitlab/gitlab-runner:alpine
 # ghcr.io/open-webui/open-webui:main
 
-# golang 最新版本
+# golang 最新版本 1.25.1
 golang:1.24-alpine3.22
 golang:1.25-alpine3.22
 
