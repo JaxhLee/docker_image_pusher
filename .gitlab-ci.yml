@@ -1,0 +1,100 @@
+# GitLab CI: 推送镜像到阿里云容器镜像服务（ACR）
+# 参考 .github/workflows/docker.yaml 的逻辑进行改写
+
+stages:
+  - docker
+
+variables:
+  _D: 1
+  # 从 GitLab CI/CD Variables 注入以下机密
+  # ALIYUN_REGISTRY: "registry.cn-xxx.aliyuncs.com"
+  # ALIYUN_NAME_SPACE: "your_namespace"
+  # ALIYUN_REGISTRY_USER: "username"
+  # ALIYUN_REGISTRY_PASSWORD: "password"
+docker_push:
+  stage: docker
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "api"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  # 直接使用已安装 Docker 的 Runner，无需 dind 与预清理步骤
+
+  script:
+  - |
+    set -eu
+
+    echo "Login Aliyun Registry: ${ALIYUN_REGISTRY}"
+    docker login -u "${ALIYUN_REGISTRY_USER}" -p "${ALIYUN_REGISTRY_PASSWORD}" "${ALIYUN_REGISTRY}"
+
+    # 规范化换行（处理可能的 CRLF）
+    list_file=$(mktemp)
+    tr -d '\r' < images.txt > "$list_file"
+
+    # 第一遍：构建跨命名空间重名镜像名列表
+    dup_file=$(mktemp)
+    awk '
+      /^[ \t]*$/ { next }
+      /^[ \t]*#/ { next }
+      {
+        image = $NF
+        sub(/@.*/, "", image)
+        n = split(image, a, "/")
+        image_name_tag = a[n]
+        split(image_name_tag, t, ":")
+        image_name = t[1]
+        if (n==3) ns=a[2]; else if (n==2) ns=a[1]; else ns=""
+        if (!(image_name in seen)) {
+          seen[image_name]=ns
+        } else if (seen[image_name] != ns) {
+          dup[image_name]=1
+        }
+      }
+      END { for (k in dup) print k }
+    ' "$list_file" | sort -u > "$dup_file"
+
+    # 第二遍：逐条 pull / tag / push
+    while IFS= read -r line || [ -n "$line" ]; do
+      case "$line" in
+        ''|'#'*)
+          continue
+          ;;
+      esac
+
+      echo "docker pull $line"
+      docker pull $line
+
+      platform=$(printf "%s\n" "$line" | awk 'match($0, /--platform[ =]([^[:space:]]+)/, m){print m[1]}') || true
+      echo "platform is ${platform:-}"
+      if [ -n "${platform:-}" ]; then
+        platform_prefix=$(printf "%s" "$platform" | sed 's|/|_|g')_
+      else
+        platform_prefix=""
+      fi
+
+      image=$(printf "%s\n" "$line" | awk '{print $NF}')
+      image=${image%%@*}
+      image_name_tag=$(printf "%s\n" "$image" | awk -F'/' '{print $NF}')
+      name_space=$(printf "%s\n" "$image" | awk -F'/' '{if (NF==3) print $2; else if (NF==2) print $1; else print ""}')
+      image_name=$(printf "%s\n" "$image_name_tag" | awk -F':' '{print $1}')
+
+      name_space_prefix=""
+      if [ -n "$name_space" ] && grep -qx "$image_name" "$dup_file"; then
+        name_space_prefix="${name_space}_"
+      fi
+
+      image_name_tag=${image_name_tag%%@*}
+      new_image="${ALIYUN_REGISTRY}/${ALIYUN_NAME_SPACE}/${platform_prefix}${name_space_prefix}${image_name_tag}"
+      echo "docker tag $image $new_image"
+      docker tag "$image" "$new_image"
+      echo "docker push $new_image"
+      docker push "$new_image"
+    done < "$list_file"
+
+    echo "退出登录"
+    docker logout "${ALIYUN_REGISTRY}" || true
+    rm -f "$list_file" "$dup_file"
+
+  # 绑定到安装了 Docker 的 Runner
+  tags:
+    - docker
