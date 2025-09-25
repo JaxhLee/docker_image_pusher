@@ -41,3 +41,4 @@ registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:x86_64-v18.4.0
 # php:8.2-fpm
 # metacubex/mihomo:v1.18.8
 # --platform=linux/arm64 metacubex/mihomo:v1.18.8
+# --platform=linux/arm64 metacubex/mihomo:v1.18.8
